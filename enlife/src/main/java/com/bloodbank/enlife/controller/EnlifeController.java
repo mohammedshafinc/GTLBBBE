@@ -13,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.bloodbank.enlife.service.EnlifeService;
 import com.bloodbank.enlife.model.EnlifeModel;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -34,5 +37,10 @@ public class EnlifeController {
         return enlifeservice.register(enlifeModel);
         
     }
+    // @GetMapping("/search")
+    // public ResponseEntity<?> search(@RequestParam EnlifeModel enlifeModel) {
+    //     return ;
+    // }
+    
 
 }

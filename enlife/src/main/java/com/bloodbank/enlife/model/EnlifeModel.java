@@ -9,7 +9,7 @@ public class EnlifeModel {
     private String mobile;
     private Date dob;
     private String gender;
-    private String Address;
+    private String address;
     private String bloodGroup;
     private String district;
     private String city;
@@ -68,11 +68,11 @@ public class EnlifeModel {
     }
 
     public String getAddress() {
-        return Address;
+        return address;
     }
 
     public void setAddress(String address) {
-        this.Address = address;
+        this.address = address;
     }
 
     public String getBloodGroup() {

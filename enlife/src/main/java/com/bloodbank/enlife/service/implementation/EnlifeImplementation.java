@@ -1,15 +1,22 @@
 package com.bloodbank.enlife.service.implementation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.bloodbank.enlife.model.EnlifeModel;
 import com.bloodbank.enlife.repository.EnlifeRepository;
+import com.bloodbank.enlife.service.EnlifeService;
 
 
 @Service
 public class EnlifeImplementation implements EnlifeRepository{
+
+    private static final Logger logger = LoggerFactory.getLogger(EnlifeService.class);
 
     @Autowired
     private JdbcTemplate jdbctemplate;
@@ -39,6 +46,9 @@ public class EnlifeImplementation implements EnlifeRepository{
     @Override
     public void save(EnlifeModel enlifeModel) {
         String sql = "EXEC InsertBloodDonor @Name = ?, @Email = ?, @Password = ?, @Mobile = ?, @Dob = ?, @Gender = ?, @Address = ?, @BloodGroup = ?, @District = ?, @City = ?, @Pincode = ?, @LastDonatedDate = ?";
+        logger.info("Executing SQL: {}", sql); // Log the SQL query
+        logger.info("Data to be saved: {}", enlifeModel); // Log the data being saved
+        
         jdbctemplate.update(sql,
                 enlifeModel.getName(),
                 enlifeModel.getEmail(),

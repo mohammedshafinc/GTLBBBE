@@ -9,4 +9,6 @@ public interface EnlifeRepository  {
     boolean authenticate(String email, String password);
     boolean isEmailRegistered(String email);
     void save(EnlifeModel enlifeModel);
+
+    
 } 
