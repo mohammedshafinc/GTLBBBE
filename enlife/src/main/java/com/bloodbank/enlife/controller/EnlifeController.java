@@ -44,7 +44,7 @@ public class EnlifeController {
     }
     @PostMapping("/search")
     public ResponseEntity<List<EnlifeModel>> search(@RequestBody EnlifeModel enlifeModel) {
-        return enlifeservice.search(enlifeModel.getBloodGroup(), enlifeModel.getCity());
+        return enlifeservice.search( enlifeModel.getBloodGroup(), enlifeModel.getCity());
     }
     
 
