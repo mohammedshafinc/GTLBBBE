@@ -8,11 +8,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.bloodbank.enlife.service.EnlifeService;
 import com.bloodbank.enlife.model.EnlifeModel;
+import com.bloodbank.enlife.model.EnlifeSearchResult;
+import com.bloodbank.enlife.repository.EnlifeRepository;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -25,6 +29,7 @@ public class EnlifeController {
     private static final Logger logger = LoggerFactory.getLogger(EnlifeService.class);
     @Autowired
     private EnlifeService enlifeservice;
+    private EnlifeRepository enlifeRepository;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody EnlifeModel enlifeModel) {
@@ -37,10 +42,10 @@ public class EnlifeController {
         return enlifeservice.register(enlifeModel);
         
     }
-    // @GetMapping("/search")
-    // public ResponseEntity<?> search(@RequestParam EnlifeModel enlifeModel) {
-    //     return ;
-    // }
+    @PostMapping("/search")
+    public ResponseEntity<List<EnlifeModel>> search(@RequestBody EnlifeModel enlifeModel) {
+        return enlifeservice.search(enlifeModel.getBloodGroup(), enlifeModel.getCity());
+    }
     
 
 }
