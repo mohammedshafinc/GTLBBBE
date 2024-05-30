@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.bloodbank.enlife.model.EnlifeCampReg;
 import com.bloodbank.enlife.model.EnlifeModel;
 import com.bloodbank.enlife.model.EnlifeSearchResult;
 import com.bloodbank.enlife.repository.EnlifeRepository;
@@ -35,13 +37,15 @@ public class EnlifeServiceImpl implements EnlifeService {
 
     @Override
     public ResponseEntity<?> login(String email, String password) {
-        boolean isAuthenticated = authenticate(email, password);
+        Map<String, Object> userDetails = authenticate(email, password);
         logger.info("Login attempt for email: {}", email);
-        if (isAuthenticated) {
+        
+        if (userDetails != null) {
             logger.info("Login successful for email: {}", email);
-            return ResponseEntity.ok().body("{\"success\": true, \"message\": \"Login successful\"}");
+            return ResponseEntity.ok().body(userDetails); // Return the user details as JSON
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invalid username or password");
+            logger.info("Login failed for email: {}", email);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"success\": false, \"message\": \"Invalid username or password\"}");
         }
     }
 
@@ -81,6 +85,31 @@ public class EnlifeServiceImpl implements EnlifeService {
         }
     }
 
+
+  // camp registration  
+  
+    @Override
+    public ResponseEntity<?> campRegistration(EnlifeCampReg enlifeCampReg){
+        try {
+            // Call the stored procedure to insert the camp registration information
+
+            String sql = "EXEC BloodDonationCampRegistration_19749 @OrganisationName = ?, @Email = ?,  @Phone = ?,  @Location= ?, @Date = ?";
+            jdbcTemplate.update(sql,
+            enlifeCampReg.getOrganisationName(),
+            enlifeCampReg.getEmail(),
+            enlifeCampReg.getPhone(),
+            enlifeCampReg.getLocation(),
+            enlifeCampReg.getDate()
+            );
+            logger.info("campregistration successful for email: {}", enlifeCampReg.getEmail());
+            return ResponseEntity.ok("campregistration  successful");
+            
+        } catch (Exception e) {
+            logger.error("campregistration failed for email: {}", enlifeCampReg.getEmail(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("campregistration failed: " + e.getMessage());
+        }
+    }
+
     @Override
     public ResponseEntity<List<EnlifeModel>> search(String bloodGroup, String City) {
         System.out.println(City);
@@ -100,18 +129,23 @@ public class EnlifeServiceImpl implements EnlifeService {
     }
 
     @Override
-    public boolean authenticate(String email, String password) {
-
-        // Query to check if the provided email and password match in the database
+    public Map<String, Object> authenticate(String email, String password) {
         String sql = "EXEC UserLogin @Email = ?, @Password = ?";
+        List<Map<String, Object>> users = jdbcTemplate.queryForList(sql, email, password);
+        
+        if (users.isEmpty()) {
+            return null;
+        } else {
+            return users.get(0); // Return the first user details (there should be only one match)
+        }
+    }
 
-         // Execute the query and get the count
-         int count = jdbcTemplate.queryForObject(sql, Integer.class, email, password);
-         System.out.println(email);
-         System.out.println(password);
-
-        // Return true if count is greater than 0 (i.e., there is a matching user), false otherwise
-         return count > 0;
+    // getting camp details
+    @Override
+    public List<Map<String, Object>> getCampReg() {
+        String sql = "EXEC getCampresult_19749";  // Adjust the stored procedure name if different
+        List<Map<String, Object>> campRegResults = jdbcTemplate.queryForList(sql);
+        return campRegResults;
     }
 
 

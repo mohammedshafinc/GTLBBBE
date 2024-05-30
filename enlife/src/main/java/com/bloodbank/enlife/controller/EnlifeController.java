@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.bloodbank.enlife.service.EnlifeService;
+import com.bloodbank.enlife.model.EnlifeCampReg;
 import com.bloodbank.enlife.model.EnlifeModel;
 import com.bloodbank.enlife.model.EnlifeSearchResult;
 import com.bloodbank.enlife.repository.EnlifeRepository;
@@ -46,6 +48,19 @@ public class EnlifeController {
     public ResponseEntity<List<EnlifeModel>> search(@RequestBody EnlifeModel enlifeModel) {
         return enlifeservice.search( enlifeModel.getBloodGroup(), enlifeModel.getCity());
     }
+    
+    @PostMapping("/campregistration")
+    public ResponseEntity<?> campRegistration(@RequestBody EnlifeCampReg enlifeCampReg) {
+        logger.info("Registration request received with data: {}", enlifeCampReg);
+        
+        return enlifeservice.campRegistration(enlifeCampReg);
+    }
+    @GetMapping("/camplist")
+    public ResponseEntity<List<Map<String, Object>>> getCampReg() {
+        List<Map<String, Object>> books = enlifeservice.getCampReg();
+        return ResponseEntity.ok(books);
+    }
+    
     
 
 }
