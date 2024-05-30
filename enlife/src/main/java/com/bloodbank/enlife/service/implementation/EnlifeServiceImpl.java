@@ -148,5 +148,13 @@ public class EnlifeServiceImpl implements EnlifeService {
         return campRegResults;
     }
 
+    // to get the count of the camp
+    @Override
+    public int getCampCount() {
+        String sql = "EXEC GetCampRegistrationCount";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class);
+        return (count != null) ? count : 0;
+    }
+
 
 }

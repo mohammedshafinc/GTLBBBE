@@ -60,6 +60,13 @@ public class EnlifeController {
         List<Map<String, Object>> books = enlifeservice.getCampReg();
         return ResponseEntity.ok(books);
     }
+
+    @GetMapping("/campcount")
+    public ResponseEntity<Integer> getCampCount() {
+        int count = enlifeservice.getCampCount();
+        return ResponseEntity.ok(count);
+    }
+    
     
     
 
