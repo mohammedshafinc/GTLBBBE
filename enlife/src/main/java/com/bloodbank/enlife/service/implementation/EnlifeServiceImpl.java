@@ -112,11 +112,11 @@ public class EnlifeServiceImpl implements EnlifeService {
 
     @Override
     public ResponseEntity<List<EnlifeModel>> search(String bloodGroup, String City) {
-        System.out.println(City);
-        System.out.println(bloodGroup);
+        logger.info("Search request received for bloodGroup: {} and city: {}", bloodGroup, City);
         String sql = "EXEC search_19749 @BloodGroup = '" + bloodGroup + "', @Place = '" + City + "'";
         List<EnlifeModel> searchResults = namedParameterJdbcTemplate.query(sql, new BeanPropertyRowMapper<>(EnlifeModel.class));
-       System.out.println(searchResults);
+        logger.debug("SQL Query executed: {}", sql);
+        logger.info("Search results: {}", searchResults);
         return ResponseEntity.ok(searchResults);
     }
 
@@ -130,6 +130,7 @@ public class EnlifeServiceImpl implements EnlifeService {
 
     @Override
     public Map<String, Object> authenticate(String email, String password) {
+        
         String sql = "EXEC UserLogin @Email = ?, @Password = ?";
         List<Map<String, Object>> users = jdbcTemplate.queryForList(sql, email, password);
         
